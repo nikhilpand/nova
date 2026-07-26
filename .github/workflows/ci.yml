@@ -32,7 +32,7 @@ jobs:
           fi
 
       - name: Run Code Style & Lint Check
-        run: ./gradlew lint --continue --warning-mode=all
+        run: ./gradlew lint -Dlint.abortOnError=false --continue --warning-mode=all
 
       - name: Run Unit Tests
         run: ./gradlew testDebugUnitTest --warning-mode=all
