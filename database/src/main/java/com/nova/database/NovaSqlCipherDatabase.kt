@@ -58,6 +58,12 @@ interface UserDao {
     @Query("SELECT * FROM users WHERE id = :userId")
     fun getUserById(userId: String): Flow<UserEntity?>
 
+    @Query("SELECT * FROM users WHERE username = :username LIMIT 1")
+    suspend fun getUserByUsername(username: String): UserEntity?
+
+    @Query("SELECT * FROM users WHERE username LIKE '%' || :query || '%' OR displayName LIKE '%' || :query || '%'")
+    fun searchUsers(query: String): Flow<List<UserEntity>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUser(user: UserEntity)
 }
@@ -67,6 +73,9 @@ interface ConversationDao {
     @Query("SELECT * FROM conversations ORDER BY isPinned DESC, lastMessageTime DESC")
     fun getAllConversations(): Flow<List<ConversationEntity>>
 
+    @Query("SELECT * FROM conversations WHERE title LIKE '%' || :query || '%' OR lastMessage LIKE '%' || :query || '%'")
+    fun searchConversations(query: String): Flow<List<ConversationEntity>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertConversation(conversation: ConversationEntity)
 }
@@ -75,6 +84,9 @@ interface ConversationDao {
 interface MessageDao {
     @Query("SELECT * FROM messages WHERE conversationId = :convId ORDER BY timestamp ASC")
     fun getMessagesForConversation(convId: String): Flow<List<MessageEntity>>
+
+    @Query("SELECT * FROM messages WHERE encryptedContent LIKE '%' || :query || '%' ORDER BY timestamp DESC")
+    fun searchMessages(query: String): Flow<List<MessageEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMessage(message: MessageEntity)
