@@ -1,22 +1,21 @@
 package com.example.nova
 
-import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-object ChatListKey : NavKey
+object ChatListRoute
 
 @Serializable
-data class ChatDetailKey(val conversationId: String) : NavKey
+data class ChatDetailRoute(val conversationId: String)
 
 @Serializable
-object ProfileKey : NavKey
+object ProfileRoute
 
 @Serializable
-object CommunitiesKey : NavKey
+object CommunitiesRoute
 
 @Serializable
-object AiWorkspaceKey : NavKey
+object AiWorkspaceRoute
 
 @Serializable
-object SettingsKey : NavKey
+object SettingsRoute
