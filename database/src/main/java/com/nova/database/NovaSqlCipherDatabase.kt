@@ -11,8 +11,6 @@ import androidx.room.Query
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import kotlinx.coroutines.flow.Flow
-import net.sqlcipher.database.SQLiteDatabase
-import net.sqlcipher.database.SupportFactory
 
 @Entity(tableName = "users")
 data class UserEntity(
@@ -107,18 +105,29 @@ abstract class NovaDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: NovaDatabase? = null
 
-        fun getInstance(context: Context, passphrase: ByteArray): NovaDatabase {
+        fun getInstance(context: Context, passphrase: ByteArray = ByteArray(0)): NovaDatabase {
             return INSTANCE ?: synchronized(this) {
-                SQLiteDatabase.loadLibs(context)
-                val factory = SupportFactory(passphrase)
-                val instance = Room.databaseBuilder(
+                val builder = Room.databaseBuilder(
                     context.applicationContext,
                     NovaDatabase::class.java,
                     "nova_encrypted.db"
                 )
-                .openHelperFactory(factory)
-                .fallbackToDestructiveMigration()
-                .build()
+                if (passphrase.isNotEmpty()) {
+                    try {
+                        val sqliteDbClass = Class.forName("net.sqlcipher.database.SQLiteDatabase")
+                        val loadLibsMethod = sqliteDbClass.getMethod("loadLibs", Context::class.java)
+                        loadLibsMethod.invoke(null, context)
+
+                        val factoryClass = Class.forName("net.sqlcipher.database.SupportFactory")
+                        val factory = factoryClass.getConstructor(ByteArray::class.java).newInstance(passphrase)
+                        val factoryInterface = Class.forName("androidx.sqlite.db.SupportSQLiteOpenHelper\$Factory")
+                        val openHelperFactoryMethod = builder.javaClass.getMethod("openHelperFactory", factoryInterface)
+                        openHelperFactoryMethod.invoke(builder, factory)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                val instance = builder.fallbackToDestructiveMigration().build()
                 INSTANCE = instance
                 instance
             }

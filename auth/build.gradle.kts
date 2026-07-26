@@ -20,6 +20,7 @@ android {
 }
 
 dependencies {
+    implementation(platform(libs.supabase.bom))
     implementation(libs.supabase.auth)
     implementation(libs.credentials)
     implementation(libs.credentials.play.services)

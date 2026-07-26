@@ -89,7 +89,7 @@ androidx-compose-material-icons-extended = { module = "androidx.compose.material
 
 # Firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
-firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx", version = "24.0.3" }
 
 # Credential Manager (Passkeys)
 credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
