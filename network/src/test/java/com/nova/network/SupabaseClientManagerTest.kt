@@ -22,8 +22,8 @@ class SupabaseClientManagerTest {
 
   @Test
   fun testGetStorageUploadUrl() {
-    manager.initializeSupabase()
     val url = manager.getStorageUploadUrl("avatars", "user_1.png")
     assertNotNull(url)
+    assertEquals("https://oqqqzdhxwpqsholcfdsg.supabase.co/storage/v1/object/public/avatars/user_1.png", url)
   }
 }

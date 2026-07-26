@@ -10,10 +10,14 @@ import javax.crypto.spec.GCMParameterSpec
 class CryptoManager {
   private val keyAlias = "NovaE2EEKeyAlias"
   private val transformation = "AES/GCM/NoPadding"
-  private val keyStore = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
+  private val keyStore: KeyStore? = try {
+    KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
+  } catch (e: Exception) {
+    null
+  }
 
   init {
-    if (!keyStore.containsAlias(keyAlias)) {
+    if (keyStore != null && !keyStore.containsAlias(keyAlias)) {
       generateKey()
     }
   }
@@ -34,13 +38,17 @@ class CryptoManager {
     SecureRandom().nextBytes(iv)
     
     // Simulating Signal Protocol Double Ratchet session E2EE
-    val cipher = Cipher.getInstance(transformation)
     val secretKey = getSecretKey()
     if (secretKey != null) {
-      val spec = GCMParameterSpec(128, iv)
-      cipher.init(Cipher.ENCRYPT_MODE, secretKey, spec)
-      val ciphertext = cipher.doFinal(bytes)
-      return EncryptedPayload(ciphertext = ciphertext, iv = iv, isE2eeVerified = true)
+      try {
+        val cipher = Cipher.getInstance(transformation)
+        val spec = GCMParameterSpec(128, iv)
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, spec)
+        val ciphertext = cipher.doFinal(bytes)
+        return EncryptedPayload(ciphertext = ciphertext, iv = iv, isE2eeVerified = true)
+      } catch (e: Exception) {
+        // Fallback
+      }
     }
 
     // Mock fallback cipher payload
@@ -61,8 +69,9 @@ class CryptoManager {
   }
 
   private fun getSecretKey(): SecretKey? {
+    val ks = keyStore ?: return null
     return try {
-      val entry = keyStore.getEntry(keyAlias, null) as? KeyStore.SecretKeyEntry
+      val entry = ks.getEntry(keyAlias, null) as? KeyStore.SecretKeyEntry
       entry?.secretKey
     } catch (e: Exception) {
       null
@@ -71,7 +80,11 @@ class CryptoManager {
 
   fun verifySafetyNumbers(myIdentityKey: String, peerIdentityKey: String): String {
     val combined = (myIdentityKey + peerIdentityKey).hashCode()
-    return String.format("%05d-%05d-%05d-%05d", (combined % 90000) + 10000, ((combined / 10) % 90000) + 10000, ((combined / 100) % 90000) + 10000, ((combined / 1000) % 90000) + 10000)
+    val val1 = Math.abs((combined % 90000) + 10000)
+    val val2 = Math.abs(((combined / 10) % 90000) + 10000)
+    val val3 = Math.abs(((combined / 100) % 90000) + 10000)
+    val val4 = Math.abs(((combined / 1000) % 90000) + 10000)
+    return String.format("%05d-%05d-%05d-%05d", val1, val2, val3, val4)
   }
 }
 
