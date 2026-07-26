@@ -111,6 +111,8 @@ dependencies {
   implementation(libs.hilt.navigation.compose)
 
   // Supabase SDK
+  implementation(platform(libs.supabase.bom))
+  implementation(libs.supabase.core)
   implementation(libs.supabase.postgrest)
   implementation(libs.supabase.auth)
   implementation(libs.supabase.realtime)

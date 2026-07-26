@@ -21,7 +21,10 @@ android {
 
 dependencies {
     implementation(platform(libs.supabase.bom))
+    implementation(libs.supabase.core)
     implementation(libs.supabase.auth)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
     implementation(libs.credentials)
     implementation(libs.credentials.play.services)
     implementation(libs.androidx.core.ktx)

@@ -21,6 +21,7 @@ android {
 
 dependencies {
     implementation(platform(libs.supabase.bom))
+    implementation(libs.supabase.core)
     implementation(libs.androidx.core.ktx)
     implementation(libs.supabase.postgrest)
     implementation(libs.supabase.auth)
