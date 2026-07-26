@@ -144,8 +144,10 @@ dependencies {
   // ML Kit
   implementation(libs.mlkit.text.recognition)
 
-  // Serialization
+  // Serialization & Coroutines
   implementation(libs.kotlinx.serialization.json)
+  implementation(libs.kotlinx.coroutines.core)
+  implementation(libs.kotlinx.coroutines.android)
 
   // UI Helpers
   implementation(libs.haze)

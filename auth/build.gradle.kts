@@ -24,4 +24,5 @@ dependencies {
     implementation(libs.credentials)
     implementation(libs.credentials.play.services)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.kotlinx.coroutines.core)
 }
