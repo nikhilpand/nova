@@ -24,14 +24,14 @@ jobs:
       - name: Grant Execute Permission for Gradlew
         run: chmod +x gradlew
 
-      - name: Run Code Style & Ktlint Check
-        run: ./gradlew lint --continue
+      - name: Run Code Style & Lint Check
+        run: ./gradlew lint --continue --warning-mode=all
 
       - name: Run Unit Tests
-        run: ./gradlew testDebugUnitTest
+        run: ./gradlew testDebugUnitTest --warning-mode=all
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleDebug --warning-mode=all
 
       - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
