@@ -7,7 +7,7 @@ import io.github.jan_tennert.supabase.realtime.Realtime
 import io.github.jan_tennert.supabase.realtime.realtime
 import io.github.jan_tennert.supabase.storage.Storage
 import io.github.jan_tennert.supabase.storage.storage
-import io.github.jan_tennert.supabase.auth.Auth
+import io.github.jan_tennert.supabase.gotrue.GoTrue
 import io.github.jan_tennert.supabase.functions.Functions
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -22,7 +22,7 @@ data class SupabaseRealtimeEvent(
 /**
  * Production Supabase Cloud Infrastructure Manager.
  * Wraps io.github.jan-tennert.supabase Kotlin SDK.
- * Configures PostgreSQL (Postgrest), WebSockets (Realtime), Auth, Storage, and Edge Functions.
+ * Configures PostgreSQL (Postgrest), WebSockets (Realtime), Auth (GoTrue), Storage, and Edge Functions.
  */
 class SupabaseClientManager {
 
@@ -44,7 +44,7 @@ class SupabaseClientManager {
         ) {
             install(Postgrest)
             install(Realtime)
-            install(Auth)
+            install(GoTrue)
             install(Storage)
             install(Functions)
         }
