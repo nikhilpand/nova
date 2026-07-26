@@ -68,6 +68,23 @@ dependencies {
   implementation(composeBom)
   androidTestImplementation(composeBom)
 
+  // Project Submodules
+  implementation(project(":core"))
+  implementation(project(":domain"))
+  implementation(project(":data"))
+  implementation(project(":network"))
+  implementation(project(":database"))
+  implementation(project(":auth"))
+  implementation(project(":messaging"))
+  implementation(project(":media"))
+  implementation(project(":calls"))
+  implementation(project(":ai"))
+  implementation(project(":notifications"))
+  implementation(project(":settings"))
+  implementation(project(":designsystem"))
+  implementation(project(":communities"))
+  implementation(project(":security"))
+
   // Core Android
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.lifecycle.runtime.ktx)
