@@ -38,9 +38,11 @@ fun SearchScreen(
   var searchQuery by remember { mutableStateOf("") }
   var selectedFilter by remember { mutableStateOf("ALL") }
 
-  val filters = listOf("ALL", "MESSAGES", "MEDIA", "FILES", "GUILDS")
+  val filters = listOf("ALL", "PEOPLE", "MESSAGES", "MEDIA", "FILES", "GUILDS")
 
   val mockResults = listOf(
+    SearchResultItem("u1", "Sarah Connor (@sarah_connor)", "Verified E2EE • Online • Click to start chat", "PEOPLE"),
+    SearchResultItem("u2", "Marcus Vance (@marcus_vance)", "NOVA Core Architect • Online", "PEOPLE"),
     SearchResultItem("s1", "Signal E2EE Session Key Exchange", "Sarah Connor: The keys have been verified...", "MESSAGES"),
     SearchResultItem("s2", "NOVA Architecture Whiteboard.png", "Media attachment (1.4 MB)", "MEDIA"),
     SearchResultItem("s3", "NOVA Project Bible v1.0.pdf", "PDF Document (3.2 MB)", "FILES"),
@@ -108,6 +110,7 @@ fun SearchScreen(
     ) {
       items(filteredResults) { res ->
         val icon = when (res.category) {
+          "PEOPLE" -> Icons.Default.Person
           "MEDIA" -> Icons.Default.Image
           "FILES" -> Icons.Default.Description
           else -> Icons.Default.Chat
