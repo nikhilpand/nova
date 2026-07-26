@@ -18,10 +18,29 @@ android {
         versionName = "0.1.0-alpha"
     }
 
+    signingConfigs {
+        create("release") {
+            val keystorePath = System.getenv("KEYSTORE_FILE") ?: (project.rootDir.path + "/release.keystore")
+            val keystoreFile = file(keystorePath)
+            if (keystoreFile.exists()) {
+                storeFile = keystoreFile
+                storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "NovaReleaseStorePassword2026"
+                keyAlias = System.getenv("KEY_ALIAS") ?: "nova_release_key"
+                keyPassword = System.getenv("KEY_PASSWORD") ?: "NovaReleaseKeyPassword2026"
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            val releaseConfig = signingConfigs.findByName("release")
+            if (releaseConfig != null && releaseConfig.storeFile != null) {
+                signingConfig = releaseConfig
+            } else {
+                signingConfig = signingConfigs.getByName("debug")
+            }
         }
     }
     compileOptions {
