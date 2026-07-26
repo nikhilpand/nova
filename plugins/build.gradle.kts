@@ -20,4 +20,6 @@ android {
 
 dependencies {
     implementation(project(":sdk"))
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.kotlinx.coroutines.core)
 }

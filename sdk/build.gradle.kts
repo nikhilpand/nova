@@ -17,3 +17,8 @@ android {
         jvmTarget = "17"
     }
 }
+
+dependencies {
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.kotlinx.coroutines.core)
+}
