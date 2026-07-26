@@ -24,6 +24,13 @@ jobs:
       - name: Grant Execute Permission for Gradlew
         run: chmod +x gradlew
 
+      - name: Ensure Google Services Configuration
+        run: |
+          mkdir -p app
+          if [ ! -f app/google-services.json ]; then
+            echo '{"project_info":{"project_number":"123456789012","project_id":"nova-app","storage_bucket":"nova-app.appspot.com"},"client":[{"client_info":{"mobilesdk_app_id":"1:123456789012:android:abcdef1234567890","android_client_info":{"package_name":"com.example.nova"}},"oauth_client":[],"api_key":[{"current_key":"AIzaSyMockKeyForBuildVerification123"}],"services":{"appinvite_service":{"other_platform_oauth_client":[]}}}]}' > app/google-services.json
+          fi
+
       - name: Run Code Style & Lint Check
         run: ./gradlew lint --continue --warning-mode=all
 

@@ -78,11 +78,12 @@ haze = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
 
 # Supabase SDK
 supabase-bom = { module = "io.github.jan-tennert.supabase:bom", version.ref = "supabase" }
-supabase-postgrest = { module = "io.github.jan-tennert.supabase:postgrest-kt" }
-supabase-auth = { module = "io.github.jan-tennert.supabase:auth-kt" }
-supabase-realtime = { module = "io.github.jan-tennert.supabase:realtime-kt" }
-supabase-storage = { module = "io.github.jan-tennert.supabase:storage-kt" }
-supabase-functions = { module = "io.github.jan-tennert.supabase:functions-kt" }
+supabase-postgrest = { module = "io.github.jan-tennert.supabase:postgrest-kt", version.ref = "supabase" }
+supabase-auth = { module = "io.github.jan-tennert.supabase:gotrue-kt", version.ref = "supabase" }
+supabase-realtime = { module = "io.github.jan-tennert.supabase:realtime-kt", version.ref = "supabase" }
+supabase-storage = { module = "io.github.jan-tennert.supabase:storage-kt", version.ref = "supabase" }
+supabase-functions = { module = "io.github.jan-tennert.supabase:functions-kt", version.ref = "supabase" }
+androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 
 # Firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }

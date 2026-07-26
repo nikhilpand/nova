@@ -20,6 +20,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":network"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.kotlinx.serialization.json)
 }

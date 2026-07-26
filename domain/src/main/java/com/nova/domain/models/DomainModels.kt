@@ -61,3 +61,18 @@ data class DomainConversation(
   val isPinned: Boolean = false,
   val isSecret: Boolean = false
 )
+
+data class DomainCommunityChannel(
+  val id: String = UUID.randomUUID().toString(),
+  val name: String,
+  val type: String = "text",
+  val unread: Boolean = false
+)
+
+data class DomainCommunity(
+  val id: String = UUID.randomUUID().toString(),
+  val name: String,
+  val avatarUrl: String = "",
+  val memberCount: Int = 1,
+  val channels: List<DomainCommunityChannel> = emptyList()
+)

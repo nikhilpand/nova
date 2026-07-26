@@ -1,7 +1,7 @@
 package com.nova.communities
 
-import com.example.nova.data.Community
-import com.example.nova.data.CommunityChannel
+import com.nova.domain.models.DomainCommunity
+import com.nova.domain.models.DomainCommunityChannel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,18 +13,18 @@ import java.util.UUID
  */
 class CommunityManager {
 
-  private val _communities = MutableStateFlow<List<Community>>(emptyList())
-  val communities: StateFlow<List<Community>> = _communities.asStateFlow()
+  private val _communities = MutableStateFlow<List<DomainCommunity>>(emptyList())
+  val communities: StateFlow<List<DomainCommunity>> = _communities.asStateFlow()
 
-  fun createCommunity(name: String): Community {
-    val newComm = Community(
+  fun createCommunity(name: String): DomainCommunity {
+    val newComm = DomainCommunity(
       id = UUID.randomUUID().toString(),
       name = name,
       memberCount = 1,
       channels = listOf(
-        CommunityChannel(UUID.randomUUID().toString(), "welcome", "announcement"),
-        CommunityChannel(UUID.randomUUID().toString(), "general-chat", "text"),
-        CommunityChannel(UUID.randomUUID().toString(), "voice-lounge", "voice")
+        DomainCommunityChannel(UUID.randomUUID().toString(), "welcome", "announcement"),
+        DomainCommunityChannel(UUID.randomUUID().toString(), "general-chat", "text"),
+        DomainCommunityChannel(UUID.randomUUID().toString(), "voice-lounge", "voice")
       )
     )
     _communities.value = _communities.value + newComm
@@ -34,7 +34,7 @@ class CommunityManager {
   fun addChannel(communityId: String, channelName: String, type: String = "text") {
     _communities.value = _communities.value.map { comm ->
       if (comm.id == communityId) {
-        val newChannel = CommunityChannel(UUID.randomUUID().toString(), channelName, type)
+        val newChannel = DomainCommunityChannel(UUID.randomUUID().toString(), channelName, type)
         comm.copy(channels = comm.channels + newChannel)
       } else comm
     }

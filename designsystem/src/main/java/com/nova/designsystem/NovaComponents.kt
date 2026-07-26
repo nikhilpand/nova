@@ -21,8 +21,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.example.nova.theme.glassmorphism
-import com.example.nova.theme.liquidGlassSurface
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
