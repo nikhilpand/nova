@@ -1,0 +1,29 @@
+# Built application files
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Directory locks
+.gradle/
+build/
+*/build/
+
+# IDE & Editor files
+.idea/
+*.iml
+.vscode/
+.DS_Store
+
+# Local configuration & credentials
+local.properties
+google-services.json
+secrets.properties
+
+# Log files
+*.log
+
+# Android Studio / Gradle outputs
+/captures
+.externalNativeBuild
+.cxx

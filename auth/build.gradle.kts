@@ -1,0 +1,28 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.serialization)
+}
+
+android {
+    namespace = "com.nova.auth"
+    compileSdk = 36
+    defaultConfig {
+        minSdk = 26
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+}
+
+kotlin {
+    jvmToolchain(17)
+}
+
+dependencies {
+    implementation(platform(libs.supabase.bom))
+    implementation(libs.supabase.auth)
+    implementation(libs.credentials)
+    implementation(libs.credentials.play.services)
+    implementation(libs.androidx.core.ktx)
+}

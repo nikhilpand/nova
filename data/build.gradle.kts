@@ -1,0 +1,28 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.serialization)
+}
+
+android {
+    namespace = "com.nova.data"
+    compileSdk = 36
+    defaultConfig {
+        minSdk = 26
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+}
+
+kotlin {
+    jvmToolchain(17)
+}
+
+dependencies {
+    implementation(project(":domain"))
+    implementation(project(":database"))
+    implementation(project(":network"))
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.core.ktx)
+}
