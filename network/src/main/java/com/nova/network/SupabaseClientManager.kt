@@ -6,7 +6,6 @@ import io.github.jan_tennert.supabase.postgrest.Postgrest
 import io.github.jan_tennert.supabase.realtime.Realtime
 import io.github.jan_tennert.supabase.realtime.realtime
 import io.github.jan_tennert.supabase.storage.Storage
-import io.github.jan_tennert.supabase.storage.storage
 import io.github.jan_tennert.supabase.gotrue.GoTrue
 import io.github.jan_tennert.supabase.functions.Functions
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -53,13 +52,16 @@ class SupabaseClientManager {
 
     suspend fun subscribeToRealtimeChatChannel(chatId: String) {
         val currentClient = client ?: return
-        val channel = currentClient.realtime.channel("chat_$chatId")
-        channel.subscribe()
-        println("📡 Subscribed to Supabase Realtime channel: chat_$chatId")
+        try {
+            val channel = currentClient.realtime.channel("chat_$chatId")
+            channel.subscribe()
+            println("📡 Subscribed to Supabase Realtime channel: chat_$chatId")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun getStorageUploadUrl(bucket: String, filename: String): String {
-        val currentClient = client ?: return ""
-        return currentClient.storage.from(bucket).publicUrl(filename)
+        return "$DEFAULT_URL/storage/v1/object/public/$bucket/$filename"
     }
 }

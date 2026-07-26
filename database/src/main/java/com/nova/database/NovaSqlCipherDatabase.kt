@@ -11,6 +11,7 @@ import androidx.room.Query
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import kotlinx.coroutines.flow.Flow
+import net.sqlcipher.database.SQLiteDatabase
 import net.sqlcipher.database.SupportFactory
 
 @Entity(tableName = "users")
@@ -108,6 +109,7 @@ abstract class NovaDatabase : RoomDatabase() {
 
         fun getInstance(context: Context, passphrase: ByteArray): NovaDatabase {
             return INSTANCE ?: synchronized(this) {
+                SQLiteDatabase.loadLibs(context)
                 val factory = SupportFactory(passphrase)
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
