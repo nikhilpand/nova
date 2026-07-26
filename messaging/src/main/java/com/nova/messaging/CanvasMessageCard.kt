@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.nova.theme.liquidGlassSurface
 
 /**
  * Interactive Canvas & Whiteboard Message Card Component.
@@ -30,7 +29,7 @@ fun CanvasMessageCard(
   Card(
     modifier = modifier
       .fillMaxWidth()
-      .liquidGlassSurface(shape = RoundedCornerShape(20.dp)),
+      .background(Color(0xFF1E293B), shape = RoundedCornerShape(20.dp)),
     colors = CardDefaults.cardColors(containerColor = Color.Transparent)
   ) {
     Column(modifier = Modifier.padding(16.dp)) {
