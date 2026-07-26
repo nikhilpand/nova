@@ -26,13 +26,18 @@ data class SupabaseRealtimeEvent(
  */
 class SupabaseClientManager {
 
+    companion object {
+        const val DEFAULT_URL = "https://oqqqzdhxwpqsholcfdsg.supabase.co"
+        const val DEFAULT_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xcXF6ZGh4d3Bxc2hvbGNmZHNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUwNzMwNzAsImV4cCI6MjEwMDY0OTA3MH0.1H8TGa8bEAjnc9YorI_jUTuCf0o8KSIci-Yx8ph6J1A"
+    }
+
     var client: SupabaseClient? = null
         private set
 
     private val _realtimeEvents = MutableSharedFlow<SupabaseRealtimeEvent>()
     val realtimeEvents: SharedFlow<SupabaseRealtimeEvent> = _realtimeEvents.asSharedFlow()
 
-    fun initializeSupabase(url: String, anonKey: String) {
+    fun initializeSupabase(url: String = DEFAULT_URL, anonKey: String = DEFAULT_ANON_KEY) {
         client = createSupabaseClient(
             supabaseUrl = url,
             supabaseKey = anonKey
