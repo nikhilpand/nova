@@ -26,7 +26,7 @@ import com.nova.calls.UltraLowLatencyVideoEngine
 fun CallScreen(
   peerName: String = "Sarah Connor",
   onEndCall: () -> Unit,
-  audioEngine: Opus4KAudioEngine = remember { Opus4KAudioEngine() },
+  audioEngine: Opus4KAudioEngine = remember(androidx.compose.ui.platform.LocalContext.current) { Opus4KAudioEngine(androidx.compose.ui.platform.LocalContext.current) },
   videoEngine: UltraLowLatencyVideoEngine = remember { UltraLowLatencyVideoEngine() },
   resilienceEngine: LowBandwidthResilienceEngine = remember { LowBandwidthResilienceEngine() },
   modifier: Modifier = Modifier

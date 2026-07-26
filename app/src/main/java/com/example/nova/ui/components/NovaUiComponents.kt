@@ -1,5 +1,6 @@
 package com.example.nova.ui.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -185,7 +186,7 @@ fun NovaAvatar(
         .fillMaxSize()
         .clip(CircleShape)
         .background(primaryColor.copy(alpha = 0.2f))
-        .border(1.5.dp, primaryColor, CircleShape),
+        .border(BorderStroke(1.5.dp, primaryColor), CircleShape),
       contentAlignment = Alignment.Center
     ) {
       Text(
@@ -202,7 +203,7 @@ fun NovaAvatar(
           .size((size * 0.3).dp)
           .clip(CircleShape)
           .background(Color(0xFF10B981))
-          .border(2.dp, MaterialTheme.colorScheme.surface, CircleShape)
+          .border(BorderStroke(2.dp, MaterialTheme.colorScheme.surface), CircleShape)
           .align(Alignment.BottomEnd)
       )
     }
