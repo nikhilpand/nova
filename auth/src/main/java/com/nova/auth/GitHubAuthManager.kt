@@ -1,7 +1,7 @@
 package com.nova.auth
 
 import io.github.jan_tennert.supabase.SupabaseClient
-import io.github.jan_tennert.supabase.gotrue.auth
+import io.github.jan_tennert.supabase.auth.auth
 
 data class GitHubProfile(
     val id: String,

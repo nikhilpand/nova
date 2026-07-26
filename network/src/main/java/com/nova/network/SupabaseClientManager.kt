@@ -6,7 +6,7 @@ import io.github.jan_tennert.supabase.postgrest.Postgrest
 import io.github.jan_tennert.supabase.realtime.Realtime
 import io.github.jan_tennert.supabase.realtime.realtime
 import io.github.jan_tennert.supabase.storage.Storage
-import io.github.jan_tennert.supabase.gotrue.Auth
+import io.github.jan_tennert.supabase.auth.Auth
 import io.github.jan_tennert.supabase.functions.Functions
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
