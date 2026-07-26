@@ -186,7 +186,7 @@ fun NovaAvatar(
         .fillMaxSize()
         .clip(CircleShape)
         .background(primaryColor.copy(alpha = 0.2f))
-        .border(BorderStroke(1.5.dp, primaryColor), CircleShape),
+        .border(width = 1.5.dp, color = primaryColor, shape = CircleShape),
       contentAlignment = Alignment.Center
     ) {
       Text(
@@ -203,7 +203,7 @@ fun NovaAvatar(
           .size((size * 0.3).dp)
           .clip(CircleShape)
           .background(Color(0xFF10B981))
-          .border(BorderStroke(2.dp, MaterialTheme.colorScheme.surface), CircleShape)
+          .border(width = 2.dp, color = MaterialTheme.colorScheme.surface, shape = CircleShape)
           .align(Alignment.BottomEnd)
       )
     }

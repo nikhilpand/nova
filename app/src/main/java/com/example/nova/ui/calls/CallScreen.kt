@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,11 +27,13 @@ import com.nova.calls.UltraLowLatencyVideoEngine
 fun CallScreen(
   peerName: String = "Sarah Connor",
   onEndCall: () -> Unit,
-  audioEngine: Opus4KAudioEngine = remember(androidx.compose.ui.platform.LocalContext.current) { Opus4KAudioEngine(androidx.compose.ui.platform.LocalContext.current) },
-  videoEngine: UltraLowLatencyVideoEngine = remember { UltraLowLatencyVideoEngine() },
-  resilienceEngine: LowBandwidthResilienceEngine = remember { LowBandwidthResilienceEngine() },
   modifier: Modifier = Modifier
 ) {
+  val context = LocalContext.current
+  val audioEngine = remember(context) { Opus4KAudioEngine(context) }
+  val videoEngine = remember { UltraLowLatencyVideoEngine() }
+  val resilienceEngine = remember { LowBandwidthResilienceEngine() }
+
   var isMuted by remember { mutableStateOf(false) }
   var isVideoEnabled by remember { mutableStateOf(true) }
   var isScreenSharing by remember { mutableStateOf(false) }
