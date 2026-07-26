@@ -13,15 +13,15 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-}
-
-kotlin {
-    jvmToolchain(17)
+    kotlinOptions {
+        jvmTarget = "17"
+    }
 }
 
 dependencies {
     implementation(project(":database"))
     implementation(project(":network"))
+    implementation(project(":domain"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.kotlinx.serialization.json)
 }
