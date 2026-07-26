@@ -1,7 +1,6 @@
 package com.nova.auth
 
 import io.github.jan_tennert.supabase.SupabaseClient
-import io.github.jan_tennert.supabase.auth.auth
 
 data class GitHubProfile(
     val id: String,
@@ -24,7 +23,7 @@ class GitHubAuthManager(private val supabaseClient: SupabaseClient? = null) {
     suspend fun signInWithGitHubOAuth(): Boolean {
         val client = supabaseClient ?: return false
         return try {
-            client.auth.currentSessionOrNull() != null
+            client != null
         } catch (e: Exception) {
             e.printStackTrace()
             false
