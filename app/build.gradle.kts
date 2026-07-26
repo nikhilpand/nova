@@ -110,15 +110,7 @@ dependencies {
   ksp(libs.hilt.compiler)
   implementation(libs.hilt.navigation.compose)
 
-  // Supabase SDK
-  implementation(platform(libs.supabase.bom))
-  implementation(libs.supabase.postgrest)
-  implementation(libs.supabase.auth)
-  implementation(libs.supabase.realtime)
-  implementation(libs.supabase.storage)
-  implementation(libs.supabase.functions)
-
-  // Ktor Client (required by Supabase SDK)
+  // Ktor Client
   implementation(libs.ktor.client.cio)
 
   // Firebase
