@@ -1,5 +1,6 @@
 package com.example.nova.di
 
+import com.example.nova.data.NovaRepository
 import com.example.nova.security.CryptoManager
 import dagger.Module
 import dagger.Provides
@@ -16,4 +17,11 @@ object AppModule {
     fun provideCryptoManager(): CryptoManager {
         return CryptoManager()
     }
+
+    @Provides
+    @Singleton
+    fun provideNovaRepository(cryptoManager: CryptoManager): NovaRepository {
+        return NovaRepository(cryptoManager)
+    }
 }
+

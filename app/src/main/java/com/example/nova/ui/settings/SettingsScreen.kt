@@ -138,7 +138,7 @@ fun SettingsScreen(
             onCheckedChange = { e2eeStrictEnabled = it }
           )
 
-          Divider(modifier = Modifier.padding(vertical = 8.dp), color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f))
+          HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp), color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f))
 
           SettingSwitchRow(
             icon = Icons.Default.Fingerprint,

@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+import com.example.nova.data.NovaRepository
+
 data class ChatListUiState(
     val conversations: List<Conversation> = emptyList(),
     val selectedCategory: ChatCategory = ChatCategory.ALL,
@@ -19,7 +21,10 @@ data class ChatListUiState(
 )
 
 @HiltViewModel
-class ChatListViewModel @Inject constructor() : ViewModel() {
+class ChatListViewModel @Inject constructor(
+    private val novaRepository: NovaRepository
+) : ViewModel() {
+
 
     private val _uiState = MutableStateFlow(ChatListUiState())
     val uiState: StateFlow<ChatListUiState> = _uiState.asStateFlow()

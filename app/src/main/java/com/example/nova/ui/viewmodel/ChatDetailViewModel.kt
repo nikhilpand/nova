@@ -14,6 +14,8 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
+import com.example.nova.data.NovaRepository
+
 data class ChatDetailUiState(
     val conversation: Conversation? = null,
     val messages: List<Message> = emptyList(),
@@ -23,8 +25,10 @@ data class ChatDetailUiState(
 
 @HiltViewModel
 class ChatDetailViewModel @Inject constructor(
-    private val cryptoManager: CryptoManager
+    private val cryptoManager: CryptoManager,
+    private val novaRepository: NovaRepository
 ) : ViewModel() {
+
 
     private val _uiState = MutableStateFlow(ChatDetailUiState())
     val uiState: StateFlow<ChatDetailUiState> = _uiState.asStateFlow()

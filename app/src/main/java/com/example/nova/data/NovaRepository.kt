@@ -1,14 +1,18 @@
 package com.example.nova.data
 
 import com.example.nova.security.CryptoManager
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.util.UUID
 
-class NovaRepository(
-  private val cryptoManager: CryptoManager = CryptoManager()
+@Singleton
+class NovaRepository @Inject constructor(
+  private val cryptoManager: CryptoManager
 ) {
+
   val currentUser = User(
     id = "user_me",
     username = "alex_nova",
