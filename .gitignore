@@ -21,6 +21,8 @@ google-services.json
 secrets.properties
 .env
 *.env
+web_test_app/
+
 
 # Log files
 *.log

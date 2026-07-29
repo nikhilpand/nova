@@ -6,8 +6,12 @@ import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class CryptoManager {
+@Singleton
+class CryptoManager @Inject constructor() {
+
   private val keyAlias = "NovaE2EEKeyAlias"
   private val transformation = "AES/GCM/NoPadding"
   private val keyStore: KeyStore? = try {
