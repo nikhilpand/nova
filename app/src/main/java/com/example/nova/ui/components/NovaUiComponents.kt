@@ -67,14 +67,22 @@ fun NovaTopBar(
             )
           }
         }
-        if (subtitle != null) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+          Box(
+            modifier = Modifier
+              .size(6.dp)
+              .clip(CircleShape)
+              .background(Color(0xFF10B981))
+          )
+          Spacer(modifier = Modifier.width(4.dp))
           Text(
-            text = subtitle,
+            text = subtitle ?: "Connected • 120 FPS Sync",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
           )
         }
       }
+
 
       if (onAiClick != null) {
         IconButton(onClick = onAiClick) {
@@ -211,12 +219,65 @@ fun NovaAvatar(
 }
 
 @Composable
+fun WhatsAppStatusAvatar(
+  name: String,
+  hasUnseenStory: Boolean = true,
+  isMine: Boolean = false,
+  size: Int = 56,
+  onClick: () -> Unit = {}
+) {
+  val initial = name.firstOrNull()?.toString()?.uppercase() ?: "N"
+  val borderColor = if (isMine) Color(0xFF10B981) else if (hasUnseenStory) Color(0xFF25D366) else Color.Gray.copy(alpha = 0.5f)
+
+  Box(
+    modifier = Modifier
+      .size(size.dp)
+      .clickable(onClick = onClick),
+    contentAlignment = Alignment.Center
+  ) {
+    Box(
+      modifier = Modifier
+        .fillMaxSize()
+        .clip(CircleShape)
+        .border(width = 2.5.dp, color = borderColor, shape = CircleShape)
+        .padding(3.dp)
+        .clip(CircleShape)
+        .background(MaterialTheme.colorScheme.primaryContainer),
+      contentAlignment = Alignment.Center
+    ) {
+      Text(
+        text = initial,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
+        fontSize = (size * 0.35).sp
+      )
+    }
+
+    if (isMine) {
+      Box(
+        modifier = Modifier
+          .size(18.dp)
+          .clip(CircleShape)
+          .background(Color(0xFF10B981))
+          .align(Alignment.BottomEnd),
+        contentAlignment = Alignment.Center
+      ) {
+        Icon(Icons.Default.Add, contentDescription = "Add Story", tint = Color.White, modifier = Modifier.size(14.dp))
+      }
+    }
+  }
+}
+
+@Composable
 fun NovaMessageBubble(
   message: Message,
   isFromMe: Boolean,
   onOptionVote: (Int) -> Unit = {},
+  onReactionClick: (String) -> Unit = {},
   onLongClick: () -> Unit = {}
 ) {
+  var isVoicePlaying by remember { androidx.compose.runtime.mutableStateOf(false) }
+
   val bubbleShape = if (isFromMe) {
     RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp, bottomStart = 20.dp, bottomEnd = 4.dp)
   } else {
@@ -224,7 +285,7 @@ fun NovaMessageBubble(
   }
 
   val bubbleColor = if (isFromMe) {
-    MaterialTheme.colorScheme.primary.copy(alpha = 0.85f)
+    MaterialTheme.colorScheme.primary.copy(alpha = 0.9f)
   } else {
     MaterialTheme.colorScheme.surfaceVariant
   }
@@ -256,6 +317,57 @@ fun NovaMessageBubble(
     ) {
       Column {
         when (message.type) {
+          MessageType.VOICE_NOTE -> {
+            Row(
+              verticalAlignment = Alignment.CenterVertically,
+              modifier = Modifier.fillMaxWidth()
+            ) {
+              IconButton(
+                onClick = { isVoicePlaying = !isVoicePlaying },
+                modifier = Modifier
+                  .size(38.dp)
+                  .clip(CircleShape)
+                  .background(if (isFromMe) Color.White.copy(alpha = 0.25f) else MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
+              ) {
+                Icon(
+                  if (isVoicePlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                  contentDescription = "Play Voice Note",
+                  tint = textColor,
+                  modifier = Modifier.size(22.dp)
+                )
+              }
+
+              Spacer(modifier = Modifier.width(8.dp))
+
+              // Waveform Bars
+              Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(3.dp),
+                modifier = Modifier.weight(1f)
+              ) {
+                val amps = if (message.waveformAmplitudes.isNotEmpty()) message.waveformAmplitudes else listOf(0.3f, 0.6f, 0.9f, 0.4f, 0.7f, 0.5f, 0.8f, 0.3f)
+                amps.forEach { amp ->
+                  Box(
+                    modifier = Modifier
+                      .width(3.dp)
+                      .height((amp * 24).dp.coerceAtLeast(6.dp))
+                      .clip(RoundedCornerShape(2.dp))
+                      .background(if (isVoicePlaying) Color(0xFF10B981) else textColor.copy(alpha = 0.6f))
+                  )
+                }
+              }
+
+              Spacer(modifier = Modifier.width(8.dp))
+
+              Text(
+                text = if (message.voiceDurationSec > 0) "0:${message.voiceDurationSec.toString().padStart(2, '0')}" else "0:14",
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
+                color = textColor.copy(alpha = 0.8f)
+              )
+            }
+          }
+
           MessageType.CODE_SNIPPET -> {
             Text(
               text = "💻 CODE [${message.codeLanguage ?: "snippet"}]",
@@ -341,8 +453,47 @@ fun NovaMessageBubble(
             fontSize = 10.sp,
             color = textColor.copy(alpha = 0.6f)
           )
+          if (isFromMe) {
+            Spacer(modifier = Modifier.width(4.dp))
+            // WhatsApp Read Receipts: ✓ (Sent), ✓✓ (Read in Blue)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+              Icon(
+                Icons.Default.DoneAll,
+                contentDescription = "Read Receipt",
+                tint = Color(0xFF38BDF8), // Double Blue Check!
+                modifier = Modifier.size(14.dp)
+              )
+            }
+          }
+        }
+      }
+    }
+
+    // Emoji Reactions Pill (WhatsApp Style)
+    if (message.reactions.isNotEmpty() || message.myReaction != null) {
+      Spacer(modifier = Modifier.height(2.dp))
+      Row(
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = Modifier.padding(start = 4.dp, end = 4.dp)
+      ) {
+        val totalReactions = message.reactions.toMutableMap()
+        if (message.myReaction != null && !totalReactions.containsKey(message.myReaction)) {
+          totalReactions[message.myReaction!!] = 1
+        }
+        totalReactions.forEach { (emoji, count) ->
+          Box(
+            modifier = Modifier
+              .clip(RoundedCornerShape(12.dp))
+              .background(MaterialTheme.colorScheme.surfaceVariant)
+              .border(width = 1.dp, color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f), shape = RoundedCornerShape(12.dp))
+              .clickable { onReactionClick(emoji) }
+              .padding(horizontal = 6.dp, vertical = 2.dp)
+          ) {
+            Text(text = "$emoji $count", fontSize = 11.sp)
+          }
         }
       }
     }
   }
 }
+

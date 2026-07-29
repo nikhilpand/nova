@@ -64,6 +64,9 @@ fun MainScreen(
           onOptionVote = { msgId, optionId ->
             repository.toggleVote(targetId, msgId, optionId)
           },
+          onReactionClick = { msgId, emoji ->
+            repository.toggleReaction(targetId, msgId, emoji)
+          },
           aiEngine = aiEngine
         )
       } else {

@@ -33,12 +33,15 @@ fun ChatDetailScreen(
   onBackClick: () -> Unit,
   onSendMessage: (String, MessageType) -> Unit,
   onOptionVote: (String, Int) -> Unit,
+  onReactionClick: (String, String) -> Unit = { _, _ -> },
   aiEngine: AiPlatformEngine = remember { AiPlatformEngine() },
   modifier: Modifier = Modifier
 ) {
   var inputText by remember { mutableStateOf("") }
-  var showAiSummaryDialog by remember { mutableStateOf(false) }
-  var summaryText by remember { mutableStateOf("") }
+  var showAiDialog by remember { mutableStateOf(false) }
+  var dialogTitle by remember { mutableStateOf("") }
+  var dialogText by remember { mutableStateOf("") }
+  var isRecordingVoice by remember { mutableStateOf(false) }
 
   val smartReplies = remember(messages) {
     val lastText = messages.lastOrNull()?.content ?: ""
@@ -53,8 +56,9 @@ fun ChatDetailScreen(
       isE2ee = true,
       onBackClick = onBackClick,
       onAiClick = {
-        summaryText = aiEngine.summarizeThread(messages)
-        showAiSummaryDialog = true
+        dialogTitle = "✨ LangGraph Thread Summary"
+        dialogText = aiEngine.summarizeThread(messages)
+        showAiDialog = true
       }
     )
 
@@ -70,7 +74,57 @@ fun ChatDetailScreen(
         NovaMessageBubble(
           message = msg,
           isFromMe = msg.senderId == "user_me",
-          onOptionVote = { optionId -> onOptionVote(msg.id, optionId) }
+          onOptionVote = { optionId -> onOptionVote(msg.id, optionId) },
+          onReactionClick = { emoji -> onReactionClick(msg.id, emoji) },
+          onLongClick = {
+            onReactionClick(msg.id, "❤️")
+          }
+        )
+      }
+    }
+
+    // LangGraph AI Action Chips Toolbar
+    LazyRow(
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 12.dp, vertical = 4.dp),
+      horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+      item {
+        AssistChip(
+          onClick = {
+            dialogTitle = "🔒 E2EE Security Audit"
+            dialogText = "🔒 Signal E2EE Double-Ratchet Session:\n• State: Verified Active\n• Safety Number: 47087 07238 53607\n• Protocol: AES-256-GCM + HKDF-SHA256"
+            showAiDialog = true
+          },
+          label = { Text("🔒 E2EE Audit", fontSize = 11.sp) },
+          leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = Color(0xFF10B981), modifier = Modifier.size(14.dp)) },
+          shape = RoundedCornerShape(14.dp)
+        )
+      }
+      item {
+        AssistChip(
+          onClick = {
+            dialogTitle = "📋 Action Tasks"
+            dialogText = aiEngine.extractActionTasks(messages.lastOrNull()?.content ?: "").joinToString("\n• ", prefix = "📋 Action Items:\n• ")
+            showAiDialog = true
+          },
+          label = { Text("📋 Extract Tasks", fontSize = 11.sp) },
+          leadingIcon = { Icon(Icons.Default.Checklist, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(14.dp)) },
+          shape = RoundedCornerShape(14.dp)
+        )
+      }
+      item {
+        AssistChip(
+          onClick = {
+            dialogTitle = "🎭 Tone Rewrite"
+            val lastText = messages.lastOrNull()?.content ?: "Meeting today"
+            dialogText = "Original: $lastText\n\n✨ Professional: ${aiEngine.rewriteText(lastText, com.example.nova.ai.AiTone.PROFESSIONAL)}\n🚀 Creative: ${aiEngine.rewriteText(lastText, com.example.nova.ai.AiTone.CREATIVE)}"
+            showAiDialog = true
+          },
+          label = { Text("🎭 Tone Rewrite", fontSize = 11.sp) },
+          leadingIcon = { Icon(Icons.Default.AutoAwesome, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(14.dp)) },
+          shape = RoundedCornerShape(14.dp)
         )
       }
     }
@@ -80,7 +134,7 @@ fun ChatDetailScreen(
       LazyRow(
         modifier = Modifier
           .fillMaxWidth()
-          .padding(horizontal = 12.dp, vertical = 4.dp),
+          .padding(horizontal = 12.dp, vertical = 2.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
       ) {
         items(smartReplies) { suggestion ->
@@ -113,7 +167,7 @@ fun ChatDetailScreen(
       OutlinedTextField(
         value = inputText,
         onValueChange = { inputText = it },
-        placeholder = { Text("Message (E2EE)...") },
+        placeholder = { Text(if (isRecordingVoice) "🎙️ Recording Voice Note..." else "Message (E2EE)...") },
         modifier = Modifier.weight(1f),
         singleLine = true,
         colors = OutlinedTextFieldDefaults.colors(
@@ -136,24 +190,38 @@ fun ChatDetailScreen(
           )
         }
       } else {
-        IconButton(onClick = { /* Voice note record */ }) {
-          Icon(Icons.Default.Mic, contentDescription = "Voice Note", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+        IconButton(
+          onClick = {
+            if (isRecordingVoice) {
+              onSendMessage("Voice note (0:14)", MessageType.VOICE_NOTE)
+              isRecordingVoice = false
+            } else {
+              isRecordingVoice = true
+            }
+          }
+        ) {
+          Icon(
+            Icons.Default.Mic,
+            contentDescription = "Voice Note",
+            tint = if (isRecordingVoice) Color.Red else MaterialTheme.colorScheme.onSurfaceVariant
+          )
         }
       }
     }
   }
 
-  // AI Summary Dialog
-  if (showAiSummaryDialog) {
+  // LangGraph AI Dialog
+  if (showAiDialog) {
     AlertDialog(
-      onDismissRequest = { showAiSummaryDialog = false },
-      title = { Text("✨ NOVA AI Thread Summary") },
-      text = { Text(summaryText) },
+      onDismissRequest = { showAiDialog = false },
+      title = { Text(dialogTitle) },
+      text = { Text(dialogText) },
       confirmButton = {
-        TextButton(onClick = { showAiSummaryDialog = false }) {
+        TextButton(onClick = { showAiDialog = false }) {
           Text("Done")
         }
       }
     )
   }
 }
+

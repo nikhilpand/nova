@@ -74,11 +74,65 @@ fun ChatListScreen(
           .padding(horizontal = 16.dp, vertical = 4.dp)
       )
 
+      // WhatsApp Status / Stories Row
+      LazyRow(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(horizontal = 16.dp, vertical = 6.dp),
+        horizontalArrangement = Arrangement.spacedBy(14.dp),
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+        item {
+          Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            com.example.nova.ui.components.WhatsAppStatusAvatar(
+              name = "Me",
+              isMine = true,
+              size = 54
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text("My Status", fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
+          }
+        }
+        item {
+          Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            com.example.nova.ui.components.WhatsAppStatusAvatar(
+              name = "Sarah Connor",
+              hasUnseenStory = true,
+              size = 54
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text("Sarah", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+          }
+        }
+        item {
+          Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            com.example.nova.ui.components.WhatsAppStatusAvatar(
+              name = "Marcus Vance",
+              hasUnseenStory = true,
+              size = 54
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text("Marcus", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+          }
+        }
+        item {
+          Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            com.example.nova.ui.components.WhatsAppStatusAvatar(
+              name = "NOVA AI",
+              hasUnseenStory = false,
+              size = 54
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text("NOVA AI", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+          }
+        }
+      }
+
       // Folder Category Tabs
       LazyRow(
         modifier = Modifier
           .fillMaxWidth()
-          .padding(horizontal = 16.dp, vertical = 8.dp),
+          .padding(horizontal = 16.dp, vertical = 6.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
       ) {
         items(ChatCategory.values()) { category ->
@@ -98,6 +152,7 @@ fun ChatListScreen(
           )
         }
       }
+
 
       // Conversation List
       LazyColumn(

@@ -64,7 +64,7 @@ class AiPlatformEngine {
         val senderCount = messages.map { it.senderName }.distinct().size
         val totalWords = messages.sumOf { it.content.split("\\s+".toRegex()).size }
         val topics = messages.takeLast(5).joinToString(", ") { it.content.take(30) }
-        return "💡 **Thread Summary:**\n• ${messages.size} messages exchanged between $senderCount contributors ($totalWords total words).\n• Recent context: $topics\n• Action Item: Review conversation thread."
+        return "🤖 **LangGraph Agent Thread Summary:**\n• ${messages.size} messages exchanged between $senderCount contributors ($totalWords total words).\n• Node: `summarizer_node` (StateGraph)\n• Recent context: $topics\n• Action Item: Review conversation thread."
     }
 
     fun rewriteText(original: String, tone: AiTone): String {

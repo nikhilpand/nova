@@ -50,12 +50,24 @@ data class Message(
   val codeLanguage: String? = null,
   val pollOptions: List<PollOption>? = null,
   val reactions: Map<String, Int> = emptyMap(),
+  val voiceDurationSec: Int = 0,
+  val waveformAmplitudes: List<Float> = emptyList(),
+  val myReaction: String? = null,
   val replyToId: String? = null,
   val replyToText: String? = null,
   val isPinned: Boolean = false,
   val isStarred: Boolean = false,
   val translation: String? = null,
   val aiSummary: String? = null
+)
+
+data class StatusStory(
+  val id: String = UUID.randomUUID().toString(),
+  val userName: String,
+  val userAvatar: String = "",
+  val timestamp: String,
+  val isMine: Boolean = false,
+  val hasUnseen: Boolean = true
 )
 
 data class Conversation(
@@ -87,3 +99,4 @@ data class Community(
   val memberCount: Int = 1240,
   val channels: List<CommunityChannel> = emptyList()
 )
+

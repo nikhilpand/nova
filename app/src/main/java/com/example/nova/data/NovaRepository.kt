@@ -28,16 +28,27 @@ class NovaRepository(
   private val _communities = MutableStateFlow<List<Community>>(emptyList())
   val communities: StateFlow<List<Community>> = _communities.asStateFlow()
 
+  private val _statusStories = MutableStateFlow<List<StatusStory>>(emptyList())
+  val statusStories: StateFlow<List<StatusStory>> = _statusStories.asStateFlow()
+
   init {
     loadMockData()
   }
 
   private fun loadMockData() {
+    // Preload Status Stories (WhatsApp Status)
+    _statusStories.value = listOf(
+      StatusStory(id = "s_my", userName = "My Status", timestamp = "Tap to add status update", isMine = true, hasUnseen = false),
+      StatusStory(id = "s_sarah", userName = "Sarah Connor", timestamp = "12m ago", hasUnseen = true),
+      StatusStory(id = "s_marcus", userName = "Marcus Vance", timestamp = "45m ago", hasUnseen = true),
+      StatusStory(id = "s_ai", userName = "Nova AI Agent", timestamp = "2h ago", hasUnseen = false)
+    )
+
     val conv1 = Conversation(
       id = "conv_signal",
       title = "Sarah Connor 🔒",
       avatarUrl = "",
-      lastMessage = "The Signal protocol keys have been verified. Launching E2EE channel.",
+      lastMessage = "Voice Note (0:14) • 🔒 Verified",
       lastMessageTime = "19:14",
       unreadCount = 2,
       isPinned = true,
@@ -69,7 +80,7 @@ class NovaRepository(
 
     _conversations.value = listOf(conv1, conv2, conv3)
 
-    // Preload message threads
+    // Preload message threads with Voice Notes and Reactions
     val msgsConv1 = listOf(
       Message(
         conversationId = "conv_signal",
@@ -77,7 +88,9 @@ class NovaRepository(
         senderName = "Sarah Connor",
         content = "Hey Alex! Is our private ratcheting session active?",
         type = MessageType.TEXT,
-        timestamp = System.currentTimeMillis() - 600000
+        timestamp = System.currentTimeMillis() - 600000,
+        status = MessageStatus.READ,
+        reactions = mapOf("🔒" to 2, "❤️" to 1)
       ),
       Message(
         conversationId = "conv_signal",
@@ -85,7 +98,20 @@ class NovaRepository(
         senderName = "Alex Rivers",
         content = "Yes! AES-256-GCM hardware key protection is enabled.",
         type = MessageType.TEXT,
-        timestamp = System.currentTimeMillis() - 300000
+        timestamp = System.currentTimeMillis() - 300000,
+        status = MessageStatus.READ,
+        myReaction = "👍"
+      ),
+      Message(
+        conversationId = "conv_signal",
+        senderId = "sarah",
+        senderName = "Sarah Connor",
+        content = "Voice note audio message",
+        type = MessageType.VOICE_NOTE,
+        voiceDurationSec = 14,
+        waveformAmplitudes = listOf(0.2f, 0.5f, 0.8f, 0.4f, 0.9f, 0.6f, 0.3f, 0.7f, 0.95f, 0.5f, 0.2f),
+        timestamp = System.currentTimeMillis() - 150000,
+        status = MessageStatus.READ
       ),
       Message(
         conversationId = "conv_signal",
@@ -94,7 +120,8 @@ class NovaRepository(
         content = "```kotlin\n// Signal E2EE Key Exchange\nval safetyNumber = crypto.verifySafetyNumbers(myKey, peerKey)\nprintln(\"Safety Code: \$safetyNumber\")\n```",
         type = MessageType.CODE_SNIPPET,
         codeLanguage = "kotlin",
-        timestamp = System.currentTimeMillis() - 100000
+        timestamp = System.currentTimeMillis() - 100000,
+        status = MessageStatus.READ
       )
     )
 
@@ -110,7 +137,8 @@ class NovaRepository(
           PollOption(2, "Liquid Glassmorphism", 28, isVotedByMe = false),
           PollOption(3, "Cyberpunk Neon", 9, isVotedByMe = false)
         ),
-        timestamp = System.currentTimeMillis() - 1200000
+        timestamp = System.currentTimeMillis() - 1200000,
+        status = MessageStatus.READ
       )
     )
 
@@ -150,10 +178,10 @@ class NovaRepository(
       senderId = currentUser.id,
       senderName = currentUser.displayName,
       senderAvatar = currentUser.avatarUrl,
-      content = text, // decrypted representation for display
+      content = text,
       type = type,
       timestamp = System.currentTimeMillis(),
-      status = MessageStatus.SENT,
+      status = MessageStatus.READ,
       isE2ee = encrypted.isE2eeVerified
     )
 
@@ -169,6 +197,25 @@ class NovaRepository(
     }
 
     return newMessage
+  }
+
+  fun toggleReaction(conversationId: String, messageId: String, emoji: String) {
+    val currentList = _messages.value[conversationId] ?: return
+    val updatedList = currentList.map { msg ->
+      if (msg.id == messageId) {
+        val currentReactions = msg.reactions.toMutableMap()
+        val nextMyReaction = if (msg.myReaction == emoji) null else emoji
+        if (msg.myReaction != null) {
+          val count = currentReactions[msg.myReaction] ?: 1
+          if (count <= 1) currentReactions.remove(msg.myReaction) else currentReactions[msg.myReaction!!] = count - 1
+        }
+        if (nextMyReaction != null) {
+          currentReactions[nextMyReaction] = (currentReactions[nextMyReaction] ?: 0) + 1
+        }
+        msg.copy(reactions = currentReactions, myReaction = nextMyReaction)
+      } else msg
+    }
+    _messages.value = _messages.value.toMutableMap().apply { put(conversationId, updatedList) }
   }
 
   fun toggleVote(conversationId: String, messageId: String, optionId: Int) {

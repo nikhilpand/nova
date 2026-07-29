@@ -19,6 +19,8 @@ build/
 local.properties
 google-services.json
 secrets.properties
+.env
+*.env
 
 # Log files
 *.log
