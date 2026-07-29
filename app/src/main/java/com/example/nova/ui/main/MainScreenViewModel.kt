@@ -14,8 +14,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
-  private val novaRepository: NovaRepository = NovaRepository()
+  private val novaRepository: NovaRepository
 ) : ViewModel() {
+
 
   val uiState: StateFlow<MainScreenUiState> =
     novaRepository.conversations
