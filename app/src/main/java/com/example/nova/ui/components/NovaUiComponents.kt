@@ -2,6 +2,7 @@ package com.example.nova.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -9,7 +10,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -276,7 +278,8 @@ fun NovaMessageBubble(
   onReactionClick: (String) -> Unit = {},
   onLongClick: () -> Unit = {}
 ) {
-  var isVoicePlaying by remember { androidx.compose.runtime.mutableStateOf(false) }
+  var isVoicePlaying by remember { mutableStateOf(false) }
+
 
   val bubbleShape = if (isFromMe) {
     RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp, bottomStart = 20.dp, bottomEnd = 4.dp)
