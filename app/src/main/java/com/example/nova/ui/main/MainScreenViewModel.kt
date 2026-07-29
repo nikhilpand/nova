@@ -9,9 +9,14 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class MainScreenViewModel(novaRepository: NovaRepository = NovaRepository()) : ViewModel() {
+@HiltViewModel
+class MainScreenViewModel @Inject constructor(
+  private val novaRepository: NovaRepository = NovaRepository()
+) : ViewModel() {
+
   val uiState: StateFlow<MainScreenUiState> =
     novaRepository.conversations
       .map<List<Conversation>, MainScreenUiState>(::Success)

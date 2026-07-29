@@ -10,8 +10,9 @@ import java.util.UUID
 
 @Singleton
 class NovaRepository @Inject constructor(
-  private val cryptoManager: CryptoManager
+  private val cryptoManager: CryptoManager = CryptoManager()
 ) {
+
 
   val currentUser = User(
     id = "user_me",
